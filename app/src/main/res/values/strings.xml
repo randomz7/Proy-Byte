@@ -1,0 +1,43 @@
+<resources>
+    <string name="app_name">Byte</string>
+    <string name="empezar">Empezar</string>
+    <string name="logo">Logotipo de la aplicación</string>
+    <string name="derechos">2026 Todos los derechos reservados</string>
+    <string name="terminos_condiciones">Terminos y condiciones</string>
+    <string name="terminos">Terminos</string>
+    <string name="title_activity_terminos">TerminosActivity</string>
+
+    <string name="texto_terminos">Los presentes Términos y Condiciones regulan el acceso, navegación y compras dentro de la aplicación móvil y plataforma web Byte, titularidad de la empresa encargada de su gestión, con domicilio fiscal y RUC registrado en la República del Perú. Al crear una cuenta o efectuar una compra dentro de la plataforma, el Usuario acepta íntegramente las condiciones descritas en este documento, las cuales se ajustan estrictamente al Código de Protección y Defensa del Consumidor (Ley N.º 29571) y a la legislación civil peruana vigente para la contratación electrónica.
+El objeto principal de Byte es la comercialización minorista de consolas de videojuegos, juegos en formato físico, códigos o licencias digitales, accesorios, componentes de hardware y merchandising afín. El uso de la plataforma está reservado para personas mayores de 18 años o menores emancipados que cuenten con capacidad legal para contratar. Asimismo, el Usuario es el único responsable de mantener la confidencialidad de sus credenciales de acceso y de las operaciones que se ejecuten desde su cuenta personal.
+Todos los precios indicados en el catálogo de Byte se encuentran expresados en Soles Peruanos (S/) e incluyen el Impuesto General a las Ventas (IGV) del 18 % exigido por la SUNAT. Las compras podrán ser liquidadas mediante los canales de pago habilitados en la aplicación, tales como tarjetas de crédito o débito, billeteras digitales y transferencias bancarias procesadas a través de pasarelas de pago seguras con certificación SSL y estándar PCI-DSS. De igual forma, el comprobante de pago electrónico, ya sea Boleta o Factura, se emitirá automáticamente en función de la información brindada al finalizar la orden.
+La cobertura de despacho comprende Lima Metropolitana, Callao y provincias mediante operadores logísticos autorizados, determinándose las tarifas y tiempos estimados de entrega según el volumen y destino del paquete. Es obligación del Usuario consignar una dirección precisa con referencias, realizándose la entrega a cualquier persona mayor de edad presente en el domicilio previa presentación de su documento de identidad. En el caso de recibir productos con empaques dañados o adulterados, el Usuario deberá registrar la observación en el acta de entrega antes de firmar la conformidad.
+Conforme al derecho de arrepentimiento estipulado en la legislación peruana, el cliente podrá solicitar el cambio o devolución de un producto dentro de los siete días calendario posteriores a su recepción, siempre que el bien se conserve nuevo, en empaque original sellado, sin uso y con sus accesorios completos. Sin embargo, se establece la excepción de que los códigos y licencias digitales no admiten devolución ni reembolso una vez entregados o revelados por su condición intangible. En el caso de los videojuegos físicos, solo se aceptará su devolución si la envoltura de celofán o sello de fábrica no ha sido abierta.
+Respecto a la garantía legal, los productos nuevos disponen del respaldo otorgado por el fabricante o distribuidor oficial en el Perú durante un período no menor a tres meses o el que especifique la marca comercial. La garantía cubre fallas de origen o defectos de fabricación, perdiendo su validez ante daños provocados por mal uso, variaciones de voltaje, líquidos, manipulaciones no autorizadas o ruptura de sellos de seguridad. Si se determina un defecto de fábrica dentro del período cubierto, Byte tramitará la reparación, cambio de unidad o la devolución del monto abonado.
+El tratamiento de los datos personales se realiza respetando la Ley N.º 29733 (Ley de Protección de Datos Personales), utilizándose dicha información exclusivamente para la atención de pedidos, pagos, envíos y trámites de postventa. Asimismo, los Usuarios pueden ejercer sus derechos de acceso, rectificación, cancelación u oposición (ARCO) comunicándose con los canales oficiales de atención. Finalmente, la aplicación mantiene a disposición permanente un Libro de Reclamaciones Virtual para atender quejas o reclamos en un plazo máximo de quince días hábiles, sometiéndose cualquier controversia no resuelta a los tribunales del Distrito Judicial de Lima y al INDECOPI.</string>
+
+    <string name="aceptar_continuar">Aceptar y continuar</string>
+    <string name="volver">Volver</string>
+    <string name="title_activity_menu">MenuActivity</string>
+
+    <!-- Menu Principal -->
+
+    <string name="buscar_placeholder">Buscar consolas, juegos...</string>
+    <string name="ofertas_destacadas">Ofertas Destacadas ⚡</string>
+    <string name="categorias">Categorías</string>
+    <string name="productos_populares">Productos Populares</string>
+    <string name="ver_todos">Ver todos</string>
+    <string name="iniciar_sesion">Iniciar Sesión</string>
+    <string name="carrito_compras">Carrito de Compras</string>
+    <string name="agregar_al_carrito">Agregar al carrito</string>
+
+    <!-- Categorías -->
+    <string name="cat_todos">Todos</string>
+    <string name="cat_consolas">Consolas</string>
+    <string name="cat_videojuegos">Videojuegos</string>
+    <string name="cat_mandos">Mandos</string>
+    <string name="cat_sillas">Sillas Gaming</string>
+    <string name="cat_accesorios">Accesorios</string>
+    <string name="title_activity_productos">ProductosActivity</string>
+    <string name="title_activity_ofertas">OfertasActivity</string>
+
+</resources>
