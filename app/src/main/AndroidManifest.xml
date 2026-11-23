@@ -49,6 +49,22 @@
             android:label="@string/title_activity_ofertas"
             android:theme="@style/Theme.ProyectoByte"
             android:windowSoftInputMode="adjustResize" />
+        <activity
+            android:name=".screens.sucursales.SucursalesActivity"
+            android:exported="false"
+            android:label="Nuestras tiendas"
+            android:theme="@style/Theme.ProyectoByte"
+            android:windowSoftInputMode="adjustResize" />
+        <activity
+            android:name=".screens.sucursales.MapaSucursalesActivity"
+            android:exported="false"
+            android:label="Mapa de tiendas"
+            android:theme="@style/Theme.ProyectoByte"
+            android:windowSoftInputMode="adjustResize" />
+
+        <meta-data
+            android:name="com.google.android.geo.API_KEY"
+            android:value="AIzaSyDHOUoYQWzYSvwu91aMbdtFsyimYWoAUSU" />
     </application>
 
 </manifest>

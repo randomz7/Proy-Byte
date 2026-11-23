@@ -25,6 +25,7 @@ import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.AccountCircle
 import androidx.compose.material.icons.filled.Add
+import androidx.compose.material.icons.filled.LocationOn
 import androidx.compose.material.icons.filled.Search
 import androidx.compose.material.icons.filled.ShoppingCart
 import androidx.compose.material3.ExperimentalMaterial3Api
@@ -61,6 +62,7 @@ import com.example.proyectobyte.ui.theme.AppTheme
 import com.example.proyectobyte.ui.theme.ProyectoByteTheme
 import com.example.proyectobyte.components.LoginModal
 import com.example.proyectobyte.screens.ofertas.OfertasActivity
+import com.example.proyectobyte.screens.sucursales.SucursalesActivity
 
 class MenuActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -84,6 +86,9 @@ class MenuActivity : ComponentActivity() {
                     },
                     onOfertasClick = {
                         startActivity(Intent(this@MenuActivity, OfertasActivity::class.java))
+                    },
+                    onTiendasClick = {
+                        startActivity(Intent(this@MenuActivity, SucursalesActivity::class.java))
                     }
                 )
             }
@@ -105,7 +110,8 @@ fun MenuScreen(
     onLoginClick: () -> Unit = {},
     onCarritoClick: () -> Unit = {},
     onVerTodosClick: () -> Unit = {},
-    onOfertasClick: () -> Unit = {}
+    onOfertasClick: () -> Unit = {},
+    onTiendasClick: () -> Unit = {}
 ) {
     var searchQuery by remember { mutableStateOf("") }
 
@@ -141,6 +147,12 @@ fun MenuScreen(
                     )
                 },
                 actions = {
+                    IconButton(onClick = onTiendasClick) {
+                        Icon(
+                            imageVector = Icons.Default.LocationOn,
+                            contentDescription = "Nuestras tiendas"
+                        )
+                    }
                     IconButton(onClick = onLoginClick) {
                         Icon(
                             imageVector = Icons.Default.AccountCircle,
