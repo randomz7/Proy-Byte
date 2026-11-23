@@ -1,6 +1,5 @@
 package com.example.proyectobyte.screens.ofertas
 
-import android.graphics.pdf.models.ListItem
 import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
@@ -44,7 +43,7 @@ import androidx.compose.ui.unit.dp
 import com.example.proyectobyte.OfertaDummy
 import com.example.proyectobyte.R
 import com.example.proyectobyte.components.LoginModal
-import com.example.proyectobyte.screens.ofertas.ui.theme.ProyectoByteTheme
+import com.example.proyectobyte.ui.theme.ProyectoByteTheme
 import com.example.proyectobyte.ui.theme.AppTheme
 
 class OfertasActivity : ComponentActivity() {
@@ -101,7 +100,6 @@ fun OfertasScreen(
         }
     }
 }
-
 
 @Composable
 fun CardOferta(oferta: OfertaDummy){

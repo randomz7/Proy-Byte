@@ -4,63 +4,56 @@ import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.activity.enableEdgeToEdge
-import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.PaddingValues
+import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.height
+import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.ArrowBack
-import androidx.compose.material3.*
-import androidx.compose.runtime.*
+import androidx.compose.material.icons.outlined.CloudOff
+import androidx.compose.material3.CircularProgressIndicator
+import androidx.compose.material3.ExperimentalMaterial3Api
+import androidx.compose.material3.FilledTonalButton
+import androidx.compose.material3.HorizontalDivider
+import androidx.compose.material3.Icon
+import androidx.compose.material3.IconButton
+import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.Scaffold
+import androidx.compose.material3.Text
+import androidx.compose.material3.TopAppBar
+import androidx.compose.runtime.Composable
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import com.example.proyectobyte.FilaProductoItem
+import androidx.lifecycle.ViewModelProvider
+import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.example.proyectobyte.components.LoginModal
+import com.example.proyectobyte.models.Producto
 import com.example.proyectobyte.ui.theme.AppTheme
 import com.example.proyectobyte.ui.theme.ProyectoByteTheme
-import retrofit2.Retrofit
-import retrofit2.converter.gson.GsonConverterFactory
-import retrofit2.http.GET
-
-data class Producto(
-    val id: Int = 0,
-    val nombre: String = "",
-    val descripcion: String = "",
-    val precio: String = "",
-    val descuento: String = "",
-    val marca: String = "",
-    val imagen: String = "",
-    val categoria: String = ""
-)
-
-data class ApiResponse(
-    val status: String? = null,
-    val data: List<Producto>
-)
-
-interface ApiService {
-    @GET( "productos.php")
-    suspend fun getProductos() : ApiResponse
-
-}
-
-object RetrofitClient {
-    val api: ApiService by lazy {
-        Retrofit.Builder()
-            .baseUrl("https://adrbo.alwaysdata.net/")
-            .addConverterFactory(GsonConverterFactory.create())
-            .build().create(ApiService::class.java)
-
-    }
-}
 
 class ProductosActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+        val viewModel = ViewModelProvider(this)[ProductosViewModel::class.java]
         enableEdgeToEdge()
         setContent {
-            ProyectoByteTheme() {
+            ProyectoByteTheme {
+                val uiState by viewModel.uiState.collectAsStateWithLifecycle()
                 ProductosScreen(
-                    onVolverClick = { finish() }
+                    uiState = uiState,
+                    onBackClick = { finish() },
+                    onReintentar = { viewModel.fetchProductos() }
                 )
             }
         }
@@ -69,81 +62,91 @@ class ProductosActivity : ComponentActivity() {
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun ProductosScreen(
-    onVolverClick: () -> Unit = {}
+private fun ProductosScreen(
+    uiState: ProductosUIState,
+    onBackClick: () -> Unit,
+    onReintentar: () -> Unit
 ) {
-    var listaProductos by remember { mutableStateOf<List<Producto>>(emptyList()) }
-    var cargando by remember { mutableStateOf(true) }
-    var mensajeError by remember { mutableStateOf<String?>(null) }
-
     var showLoginDialog by remember { mutableStateOf(false) }
 
-    // Consumo de datos al abrir la pantalla exclusiva
-    LaunchedEffect(Unit) {
-        try {
-            val response = RetrofitClient.api.getProductos()
-            listaProductos = response.data
-        } catch (e: Exception) {
-            mensajeError = "Error al conectar: ${e.localizedMessage}"
-        } finally {
-            cargando = false
-        }
-    }
-
     Scaffold(
+        modifier = Modifier.fillMaxSize(),
+        containerColor = MaterialTheme.colorScheme.background,
         topBar = {
             TopAppBar(
                 title = { Text("Catálogo Completo") },
                 navigationIcon = {
-                    IconButton(onClick = onVolverClick) {
-                        Icon(
-                            imageVector = Icons.AutoMirrored.Filled.ArrowBack,
-                            contentDescription = "Volver"
-                        )
+                    IconButton(onClick = onBackClick) {
+                        Icon(Icons.AutoMirrored.Filled.ArrowBack, "Volver")
                     }
                 }
             )
         }
     ) { innerPadding ->
         Box(
-            modifier = Modifier
+            Modifier
                 .fillMaxSize()
                 .padding(innerPadding)
-                .padding(horizontal = AppTheme.spacing.medium)
         ) {
-            when {
-                cargando -> {
-                    CircularProgressIndicator(modifier = Modifier.align(Alignment.Center))
-                }
-                mensajeError != null -> {
+            when (uiState) {
+                ProductosUIState.Loading -> CircularProgressIndicator(
+                    Modifier.align(Alignment.Center),
+                    color = MaterialTheme.colorScheme.tertiary
+                )
+
+                is ProductosUIState.Error -> Column(
+                    Modifier
+                        .align(Alignment.Center)
+                        .padding(AppTheme.spacing.large),
+                    horizontalAlignment = Alignment.CenterHorizontally
+                ) {
+                    Icon(
+                        Icons.Outlined.CloudOff,
+                        contentDescription = null,
+                        modifier = Modifier.size(AppTheme.sizes.iconContainerMedium),
+                        tint = MaterialTheme.colorScheme.tertiary
+                    )
+                    Spacer(Modifier.height(AppTheme.spacing.large))
                     Text(
-                        text = mensajeError!!,
-                        color = MaterialTheme.colorScheme.error,
-                        modifier = Modifier.align(Alignment.Center)
+                        "No se pudieron cargar los productos",
+                        style = MaterialTheme.typography.titleMedium
                     )
+                    Spacer(Modifier.height(AppTheme.spacing.medium))
+                    FilledTonalButton(onClick = onReintentar) { Text("Reintentar") }
                 }
-                else -> {
-                    LazyColumn(
-                        modifier = Modifier.fillMaxSize(),
-                        verticalArrangement = Arrangement.spacedBy(AppTheme.spacing.small)
-                    ) {
-                        items(listaProductos) { producto ->
-                            FilaProductoItem(producto = producto,
-                                onAddClick = {
-                                    showLoginDialog = true
-                                })
-                            HorizontalDivider(
-                                modifier = Modifier.padding(top = AppTheme.spacing.small),
-                                color = MaterialTheme.colorScheme.outline.copy(alpha = 0.2f)
-                            )
-                        }
-                    }
-                    LoginModal(
-                        show = showLoginDialog,
-                        onDismiss = {showLoginDialog = false}
-                    )
-                }
+
+                is ProductosUIState.Success -> ListaProductos(
+                    productos = uiState.productos,
+                    onAddClick = { showLoginDialog = true }
+                )
             }
+        }
+    }
+
+    LoginModal(
+        show = showLoginDialog,
+        onDismiss = { showLoginDialog = false }
+    )
+}
+
+@Composable
+private fun ListaProductos(
+    productos: List<Producto>,
+    onAddClick: () -> Unit
+) {
+    LazyColumn(
+        modifier = Modifier.fillMaxSize(),
+        contentPadding = PaddingValues(
+            horizontal = AppTheme.spacing.medium,
+            vertical = AppTheme.spacing.small
+        ),
+        verticalArrangement = Arrangement.spacedBy(AppTheme.spacing.small)
+    ) {
+        items(productos, key = { it.id }) { producto ->
+            ProductoItem(producto = producto, onAddClick = onAddClick)
+            HorizontalDivider(
+                color = MaterialTheme.colorScheme.outline.copy(alpha = 0.2f)
+            )
         }
     }
 }

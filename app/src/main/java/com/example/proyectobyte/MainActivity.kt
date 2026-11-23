@@ -47,7 +47,7 @@ class MainActivity : ComponentActivity() {
                     )
                 }
 
-            }//ProyectoByteTheme
+            }
         }
     }
 }
@@ -74,7 +74,7 @@ fun MainScreen(
                 style = MaterialTheme.typography.titleMedium)
         }
 
-    }//Column
+    }
     Column(modifier = Modifier.fillMaxSize()
         .navigationBarsPadding()
         .padding(bottom = AppTheme.spacing.large),

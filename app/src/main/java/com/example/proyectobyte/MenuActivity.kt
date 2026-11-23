@@ -39,7 +39,6 @@ import androidx.compose.material3.Text
 import androidx.compose.material3.TextButton
 import androidx.compose.material3.TopAppBar
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
@@ -51,10 +50,13 @@ import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
-import coil.compose.AsyncImage
-import com.example.proyectobyte.screens.productos.Producto
+import androidx.lifecycle.ViewModelProvider
+import androidx.lifecycle.compose.collectAsStateWithLifecycle
+import com.example.proyectobyte.models.Producto
+import com.example.proyectobyte.screens.productos.ProductoItem
+import com.example.proyectobyte.screens.productos.ProductosUIState
+import com.example.proyectobyte.screens.productos.ProductosViewModel
 import com.example.proyectobyte.screens.productos.ProductosActivity
-import com.example.proyectobyte.screens.productos.RetrofitClient
 import com.example.proyectobyte.ui.theme.AppTheme
 import com.example.proyectobyte.ui.theme.ProyectoByteTheme
 import com.example.proyectobyte.components.LoginModal
@@ -63,15 +65,19 @@ import com.example.proyectobyte.screens.ofertas.OfertasActivity
 class MenuActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+        val viewModel = ViewModelProvider(this)[ProductosViewModel::class.java]
         enableEdgeToEdge()
         setContent {
             ProyectoByteTheme {
+                val uiState by viewModel.uiState.collectAsStateWithLifecycle()
+                val productos = (uiState as? ProductosUIState.Success)?.productos ?: emptyList()
                 MenuScreen(
+                    productos = productos,
                     onLoginClick = {
-                        // Preparado para conectar navegación a Login
+
                     },
                     onCarritoClick = {
-                        // Preparado para conectar navegación a Carrito
+
                     },
                     onVerTodosClick = {
                         startActivity(Intent(this@MenuActivity, ProductosActivity::class.java))
@@ -95,6 +101,7 @@ data class OfertaDummy(
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun MenuScreen(
+    productos: List<Producto> = emptyList(),
     onLoginClick: () -> Unit = {},
     onCarritoClick: () -> Unit = {},
     onVerTodosClick: () -> Unit = {},
@@ -102,21 +109,10 @@ fun MenuScreen(
 ) {
     var searchQuery by remember { mutableStateOf("") }
 
-    // 1. Guardamos el texto en una variable primero
     val textoCategoriaTodos = stringResource(R.string.cat_todos)
-
-    var listaProductos by remember { mutableStateOf<List<Producto>>(emptyList()) }
 
     var showLoginDialog by remember { mutableStateOf(false) }
 
-    LaunchedEffect(Unit) {
-        try {
-            val response = RetrofitClient.api.getProductos()
-            listaProductos = response.data.take(5)
-        } catch (e: Exception) {
-        }
-    }
-    // 2. Se lo pasamos a remember
     var categoriaSeleccionada by remember { mutableStateOf(textoCategoriaTodos) }
     val categorias = listOf(
         stringResource(R.string.cat_todos),
@@ -133,7 +129,7 @@ fun MenuScreen(
         OfertaDummy(3, "Preventa GTA VI", "Reserva ya", imagenRes = R.drawable.gtavi)
     )
 
-    val productosLimitados = listaProductos.take(5)
+    val productosLimitados = productos.take(5)
 
     Scaffold(
         topBar = {
@@ -168,7 +164,7 @@ fun MenuScreen(
                 .padding(horizontal = AppTheme.spacing.medium),
             verticalArrangement = Arrangement.spacedBy(AppTheme.spacing.medium)
         ) {
-            // 1. Buscador
+
             item {
                 OutlinedTextField(
                     value = searchQuery,
@@ -183,7 +179,6 @@ fun MenuScreen(
                 )
             }
 
-            // 2. Banner de Ofertas Destacadas
             item {
                 Row(
                     modifier = Modifier.fillMaxWidth(),
@@ -211,7 +206,6 @@ fun MenuScreen(
                 }
             }
 
-            // 3. Filtro por Categorías
             item {
                 Text(
                     text = stringResource(R.string.categorias),
@@ -231,7 +225,6 @@ fun MenuScreen(
                 }
             }
 
-            // 4. Encabezado de Productos con botón "Ver todos"
             item {
                 Row(
                     modifier = Modifier.fillMaxWidth(),
@@ -251,9 +244,8 @@ fun MenuScreen(
                 }
             }
 
-            // 5. Lista de Productos en formato plano/tabla (Máximo 5)
             items(productosLimitados) { producto ->
-                FilaProductoItem(producto = producto,
+                ProductoItem(producto = producto,
                     onAddClick = {
                         showLoginDialog = true
                     })
@@ -309,79 +301,6 @@ fun BannerOfertaItem(
                 text = oferta.descuento,
                 style = MaterialTheme.typography.bodyMedium,
                 color = MaterialTheme.colorScheme.tertiary
-            )
-        }
-    }
-}
-
-@Composable
-fun FilaProductoItem(
-    producto: Producto,
-    onAddClick: () -> Unit
-) {
-    Row(
-        modifier = Modifier
-            .fillMaxWidth()
-            .padding(vertical = AppTheme.spacing.small),
-        verticalAlignment = Alignment.CenterVertically,
-        horizontalArrangement = Arrangement.SpaceBetween
-    ) {
-        // Contenedor de la imagen
-        Box(
-            modifier = Modifier
-                .size(AppTheme.sizes.iconContainerLarge)
-                .clip(RoundedCornerShape(AppTheme.sizes.heroCornerRadius))
-                .background(MaterialTheme.colorScheme.primaryContainer),
-            contentAlignment = Alignment.Center
-        ) {
-            if (producto.imagen.isNotEmpty()) {
-                // Si usas Coil en tu proyecto:
-                AsyncImage(
-                    model = producto.imagen,
-                    contentDescription = producto.nombre,
-                    modifier = Modifier.fillMaxSize(),
-                    contentScale = ContentScale.Crop
-                )
-            } else {
-                Icon(
-                    imageVector = Icons.Default.ShoppingCart,
-                    contentDescription = null,
-                    tint = MaterialTheme.colorScheme.primary,
-                    modifier = Modifier.size(AppTheme.sizes.iconMedium)
-                )
-            }
-        }
-
-        Spacer(modifier = Modifier.width(AppTheme.spacing.medium))
-
-        // Detalles del producto de la API
-        Column(
-            modifier = Modifier.weight(1f)
-        ) {
-            Text(
-                text = producto.nombre,
-                style = MaterialTheme.typography.titleMedium
-            )
-            if (producto.categoria.isNotEmpty()) {
-                Text(
-                    text = producto.categoria,
-                    style = MaterialTheme.typography.bodySmall,
-                    color = MaterialTheme.colorScheme.secondary
-                )
-            }
-            Text(
-                text = "S/ ${producto.precio}",
-                style = MaterialTheme.typography.labelLarge,
-                color = MaterialTheme.colorScheme.primary
-            )
-        }
-
-        // Acciones
-        IconButton(onClick = onAddClick) {
-            Icon(
-                imageVector = Icons.Default.Add,
-                contentDescription = stringResource(R.string.agregar_al_carrito),
-                modifier = Modifier.size(AppTheme.sizes.iconMedium)
             )
         }
     }

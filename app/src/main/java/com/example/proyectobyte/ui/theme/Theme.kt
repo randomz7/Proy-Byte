@@ -12,44 +12,34 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.ReadOnlyComposable
 import androidx.compose.ui.platform.LocalContext
 
-//-----------------------------------------------------
-
 private val LightColorScheme = lightColorScheme(
 
-    // Principal
     primary = AppPrimary,
     onPrimary = AppSurface,
 
     primaryContainer = AppBackground,
     onPrimaryContainer = AppForeground,
 
-    // Secundario
     secondary = AppSecondary,
     onSecondary = AppSurface,
 
     secondaryContainer = AppBackground,
     onSecondaryContainer = AppForeground,
 
-    // Acento
     tertiary = AppAccent,
     onTertiary = AppForeground,
 
-    // Fondo
     background = AppBackground,
     onBackground = AppForeground,
 
-    // Superficies
     surface = AppSurface,
     onSurface = AppForeground,
 
-    // Variante de superficie
     surfaceVariant = AppBackground,
     onSurfaceVariant = AppForeground,
 
-    // Bordes
     outline = AppSecondary,
 
-    // Tint
     surfaceTint = AppPrimary
 )
 
@@ -87,7 +77,7 @@ private val DarkColorScheme = darkColorScheme(
 @Composable
 fun ProyectoByteTheme(
     darkTheme: Boolean = isSystemInDarkTheme(),
-    // Dynamic color is available on Android 12+
+
     dynamicColor: Boolean = false, content: @Composable () -> Unit
 ) {
     val colorScheme = when {

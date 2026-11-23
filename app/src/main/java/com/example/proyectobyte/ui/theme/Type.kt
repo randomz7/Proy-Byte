@@ -8,7 +8,6 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.sp
 import com.example.proyectobyte.R
 
-// Set of Material typography styles to start with
 val interFamily = FontFamily(
     Font(R.font.inter_18pt_light, FontWeight.Light),
     Font(R.font.inter_18pt_regular, FontWeight.Normal),
@@ -18,18 +17,7 @@ val interFamily = FontFamily(
     Font(R.font.inter_18pt_black, FontWeight.Black)
 )
 
-/*
- * Sistema tipográfico Tienda
- *
- * Toda la aplicación utiliza Inter (corte óptico 18pt).
- */
-
 val Typography = Typography(
-
-    // -------------------------------------------------
-    // DISPLAY
-    // Logo / nombre principal
-    // -------------------------------------------------
 
     displayLarge = TextStyle(
         fontFamily = interFamily,
@@ -38,11 +26,6 @@ val Typography = Typography(
         lineHeight = 84.sp,
         letterSpacing = (-4).sp
     ),
-
-
-    // -------------------------------------------------
-    // HEADLINES
-    // -------------------------------------------------
 
     headlineLarge = TextStyle(
         fontFamily = interFamily,
@@ -68,11 +51,6 @@ val Typography = Typography(
         letterSpacing = 0.sp
     ),
 
-
-    // -------------------------------------------------
-    // TITLES
-    // -------------------------------------------------
-
     titleLarge = TextStyle(
         fontFamily = interFamily,
         fontWeight = FontWeight.Bold,
@@ -97,11 +75,6 @@ val Typography = Typography(
         letterSpacing = 0.sp
     ),
 
-
-    // -------------------------------------------------
-    // BODY
-    // -------------------------------------------------
-
     bodyLarge = TextStyle(
         fontFamily = interFamily,
         fontWeight = FontWeight.Normal,
@@ -125,11 +98,6 @@ val Typography = Typography(
         lineHeight = 16.sp,
         letterSpacing = 0.2.sp
     ),
-
-
-    // -------------------------------------------------
-    // LABELS
-    // -------------------------------------------------
 
     labelLarge = TextStyle(
         fontFamily = interFamily,
