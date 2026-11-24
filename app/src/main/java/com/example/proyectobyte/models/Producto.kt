@@ -8,5 +8,8 @@ data class Producto(
     val descuento: String = "",
     val marca: String = "",
     val imagen: String = "",
+    val imagen2: String? = null,
+    val imagen3: String? = null,
+    val stock_actual: Int = 0,
     val categoria: String = ""
 )

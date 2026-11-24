@@ -23,4 +23,5 @@ object RetrofitClient {
 
     val productosService: ProductosService by lazy { retrofit.create() }
     val sucursalesService: SucursalesService by lazy { retrofit.create() }
+    val estadisticasService: EstadisticasService by lazy { retrofit.create() }
 }

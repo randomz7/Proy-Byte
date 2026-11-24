@@ -25,9 +25,12 @@ import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.AccountCircle
 import androidx.compose.material.icons.filled.Add
+import androidx.compose.material.icons.filled.BarChart
 import androidx.compose.material.icons.filled.LocationOn
 import androidx.compose.material.icons.filled.Search
 import androidx.compose.material.icons.filled.ShoppingCart
+import androidx.compose.material3.CardDefaults
+import androidx.compose.material3.ElevatedCard
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.FilterChip
 import androidx.compose.material3.HorizontalDivider
@@ -47,6 +50,7 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
+import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
@@ -61,7 +65,9 @@ import com.example.proyectobyte.screens.productos.ProductosActivity
 import com.example.proyectobyte.ui.theme.AppTheme
 import com.example.proyectobyte.ui.theme.ProyectoByteTheme
 import com.example.proyectobyte.components.LoginModal
+import com.example.proyectobyte.screens.estadisticas.EstadisticasActivity
 import com.example.proyectobyte.screens.ofertas.OfertasActivity
+import com.example.proyectobyte.screens.productos.DetalleProductoActivity
 import com.example.proyectobyte.screens.sucursales.SucursalesActivity
 
 class MenuActivity : ComponentActivity() {
@@ -89,6 +95,15 @@ class MenuActivity : ComponentActivity() {
                     },
                     onTiendasClick = {
                         startActivity(Intent(this@MenuActivity, SucursalesActivity::class.java))
+                    },
+                    onEstadisticasClick = {
+                        startActivity(Intent(this@MenuActivity, EstadisticasActivity::class.java))
+                    },
+                    onProductoClick = { producto ->
+                        startActivity(
+                            Intent(this@MenuActivity, DetalleProductoActivity::class.java)
+                                .putExtra("idproducto", producto.id)
+                        )
                     }
                 )
             }
@@ -111,7 +126,9 @@ fun MenuScreen(
     onCarritoClick: () -> Unit = {},
     onVerTodosClick: () -> Unit = {},
     onOfertasClick: () -> Unit = {},
-    onTiendasClick: () -> Unit = {}
+    onTiendasClick: () -> Unit = {},
+    onEstadisticasClick: () -> Unit = {},
+    onProductoClick: (Producto) -> Unit = {}
 ) {
     var searchQuery by remember { mutableStateOf("") }
 
@@ -147,12 +164,6 @@ fun MenuScreen(
                     )
                 },
                 actions = {
-                    IconButton(onClick = onTiendasClick) {
-                        Icon(
-                            imageVector = Icons.Default.LocationOn,
-                            contentDescription = "Nuestras tiendas"
-                        )
-                    }
                     IconButton(onClick = onLoginClick) {
                         Icon(
                             imageVector = Icons.Default.AccountCircle,
@@ -189,6 +200,26 @@ fun MenuScreen(
                     singleLine = true,
                     shape = RoundedCornerShape(AppTheme.sizes.heroCornerRadius)
                 )
+            }
+
+            item {
+                Row(
+                    modifier = Modifier.fillMaxWidth(),
+                    horizontalArrangement = Arrangement.spacedBy(AppTheme.spacing.medium)
+                ) {
+                    AccesoRapido(
+                        texto = "Tiendas",
+                        icono = Icons.Default.LocationOn,
+                        onClick = onTiendasClick,
+                        modifier = Modifier.weight(1f)
+                    )
+                    AccesoRapido(
+                        texto = "Estadísticas",
+                        icono = Icons.Default.BarChart,
+                        onClick = onEstadisticasClick,
+                        modifier = Modifier.weight(1f)
+                    )
+                }
             }
 
             item {
@@ -260,7 +291,8 @@ fun MenuScreen(
                 ProductoItem(producto = producto,
                     onAddClick = {
                         showLoginDialog = true
-                    })
+                    },
+                    onClick = { onProductoClick(producto) })
                 HorizontalDivider(
                     modifier = Modifier.padding(top = AppTheme.spacing.small),
                     color = MaterialTheme.colorScheme.outline.copy(alpha = 0.2f)
@@ -313,6 +345,45 @@ fun BannerOfertaItem(
                 text = oferta.descuento,
                 style = MaterialTheme.typography.bodyMedium,
                 color = MaterialTheme.colorScheme.tertiary
+            )
+        }
+    }
+}
+
+@OptIn(ExperimentalMaterial3Api::class)
+@Composable
+fun AccesoRapido(
+    texto: String,
+    icono: ImageVector,
+    onClick: () -> Unit,
+    modifier: Modifier = Modifier
+) {
+    ElevatedCard(
+        onClick = onClick,
+        modifier = modifier,
+        shape = RoundedCornerShape(AppTheme.sizes.heroCornerRadius),
+        colors = CardDefaults.elevatedCardColors(
+            containerColor = MaterialTheme.colorScheme.surface
+        ),
+        elevation = CardDefaults.elevatedCardElevation(AppTheme.sizes.cardElevation)
+    ) {
+        Row(
+            modifier = Modifier
+                .fillMaxWidth()
+                .padding(AppTheme.spacing.medium),
+            horizontalArrangement = Arrangement.Center,
+            verticalAlignment = Alignment.CenterVertically
+        ) {
+            Icon(
+                imageVector = icono,
+                contentDescription = null,
+                tint = MaterialTheme.colorScheme.tertiary,
+                modifier = Modifier.size(AppTheme.sizes.iconMedium)
+            )
+            Spacer(modifier = Modifier.width(AppTheme.spacing.small))
+            Text(
+                text = texto,
+                style = MaterialTheme.typography.labelLarge
             )
         }
     }

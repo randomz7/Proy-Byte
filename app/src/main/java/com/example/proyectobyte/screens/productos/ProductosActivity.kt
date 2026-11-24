@@ -1,5 +1,6 @@
 package com.example.proyectobyte.screens.productos
 
+import android.content.Intent
 import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
@@ -53,7 +54,13 @@ class ProductosActivity : ComponentActivity() {
                 ProductosScreen(
                     uiState = uiState,
                     onBackClick = { finish() },
-                    onReintentar = { viewModel.fetchProductos() }
+                    onReintentar = { viewModel.fetchProductos() },
+                    onProductoClick = { producto ->
+                        startActivity(
+                            Intent(this@ProductosActivity, DetalleProductoActivity::class.java)
+                                .putExtra("idproducto", producto.id)
+                        )
+                    }
                 )
             }
         }
@@ -65,7 +72,8 @@ class ProductosActivity : ComponentActivity() {
 private fun ProductosScreen(
     uiState: ProductosUIState,
     onBackClick: () -> Unit,
-    onReintentar: () -> Unit
+    onReintentar: () -> Unit,
+    onProductoClick: (Producto) -> Unit
 ) {
     var showLoginDialog by remember { mutableStateOf(false) }
 
@@ -117,7 +125,8 @@ private fun ProductosScreen(
 
                 is ProductosUIState.Success -> ListaProductos(
                     productos = uiState.productos,
-                    onAddClick = { showLoginDialog = true }
+                    onAddClick = { showLoginDialog = true },
+                    onProductoClick = onProductoClick
                 )
             }
         }
@@ -132,7 +141,8 @@ private fun ProductosScreen(
 @Composable
 private fun ListaProductos(
     productos: List<Producto>,
-    onAddClick: () -> Unit
+    onAddClick: () -> Unit,
+    onProductoClick: (Producto) -> Unit
 ) {
     LazyColumn(
         modifier = Modifier.fillMaxSize(),
@@ -143,7 +153,11 @@ private fun ListaProductos(
         verticalArrangement = Arrangement.spacedBy(AppTheme.spacing.small)
     ) {
         items(productos, key = { it.id }) { producto ->
-            ProductoItem(producto = producto, onAddClick = onAddClick)
+            ProductoItem(
+                producto = producto,
+                onAddClick = onAddClick,
+                onClick = { onProductoClick(producto) }
+            )
             HorizontalDivider(
                 color = MaterialTheme.colorScheme.outline.copy(alpha = 0.2f)
             )

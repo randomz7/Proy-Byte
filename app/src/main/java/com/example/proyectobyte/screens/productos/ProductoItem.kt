@@ -1,6 +1,7 @@
 package com.example.proyectobyte.screens.productos
 
 import androidx.compose.foundation.background
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -37,6 +38,7 @@ import com.example.proyectobyte.ui.theme.AppTheme
 fun ProductoItem(
     producto: Producto,
     onAddClick: () -> Unit,
+    onClick: () -> Unit = {},
     modifier: Modifier = Modifier
 ) {
     val FOTO_URL = "https://adrbo.alwaysdata.net/imagenes/" + producto.imagen
@@ -44,6 +46,7 @@ fun ProductoItem(
     Row(
         modifier = modifier
             .fillMaxWidth()
+            .clickable(onClick = onClick)
             .padding(vertical = AppTheme.spacing.small),
         verticalAlignment = Alignment.CenterVertically,
         horizontalArrangement = Arrangement.SpaceBetween

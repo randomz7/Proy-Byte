@@ -8,4 +8,6 @@ class ProductosRepository(
     private val service: ProductosService = RetrofitClient.productosService
 ) {
     suspend fun listProductos(): List<Producto> = service.getProductos()
+
+    suspend fun getProducto(id: Int): Producto = service.getProducto(id)
 }
